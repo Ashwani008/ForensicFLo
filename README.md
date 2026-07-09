@@ -1,8 +1,8 @@
 # Forensic-Search
 
-> A standalone companion tool for **URUI**: generate **closed captions** (speech + non-speech sounds like *train, dog barking, siren*) for any audio/video file and **search your whole library by keyword** — clicking a result jumps straight to that timestamp in the built-in player.
+> A standalone companion tool to generate **closed captions** (speech + non-speech sounds like *train, dog barking, siren*) for any audio/video file and **search your whole library by keyword** — clicking a result jumps straight to that timestamp in the built-in player.
 
-Built for Hack2026. Runs 100% locally — no cloud, no API keys.
+ Runs 100% locally — no cloud, no API keys.
 
 ---
 
