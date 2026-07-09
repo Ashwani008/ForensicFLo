@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Forensic Flo</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="ur">
+
+<header class="ur-header">
+  <div class="brand">
+    <span class="logo-tile" aria-label="Forensic Flo">
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="13" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <line x1="19" y1="19" x2="27" y2="27" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
+        <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <line x1="9"  y1="13" x2="9"  y2="13.1"/>
+          <line x1="11" y1="10" x2="11" y2="16"/>
+          <line x1="13" y1="8"  x2="13" y2="18"/>
+          <line x1="15" y1="11" x2="15" y2="15"/>
+          <line x1="17" y1="12" x2="17" y2="14"/>
+        </g>
+      </svg>
+    </span>
+    <span class="brand-divider"></span>
+    <span class="brand-name">Forensic Flo</span>
+  </div>
+  <div class="header-icons">
+    <button title="Apps" class="hi-btn">&#9638;</button>
+    <button title="Info" class="hi-btn">&#9432;</button>
+    <button title="Notifications" class="hi-btn">&#128276;</button>
+    <span class="user-avatar">A</span>
+    <span class="user">Analyst <span class="caret">&#9662;</span></span>
+  </div>
+</header>
+
+<nav class="ur-tabs">
+  <button class="tab active">&#9654; Media</button>
+  <button class="tab">&#9707; Status</button>
+</nav>
+
+<div class="ur-toolbar">
+  <button id="toggle-filters" class="ghost-btn">&#8645; Hide Filters</button>
+  <div class="toolbar-right">
+    <label class="recent"><input type="checkbox" checked> Load Recent Media</label>
+    <button id="reindex" class="icon-btn refresh-btn" title="Refresh" aria-label="Refresh">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 12a8 8 0 1 1-2.34-5.66"></path>
+        <polyline points="20 4 20 9 15 9"></polyline>
+      </svg>
+    </button>
+    <div class="view-toggle" role="tablist" aria-label="View mode">
+      <button class="vt-btn active" data-view="tile" title="Tile View" aria-label="Tile View">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/></svg>
+      </button>
+      <button class="vt-btn" data-view="grid" title="Grid View" aria-label="Grid View">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="1.5"/><line x1="3.5" y1="9" x2="20.5" y2="9"/><line x1="3.5" y1="15" x2="20.5" y2="15"/><line x1="9" y1="3.5" x2="9" y2="20.5"/><line x1="15" y1="3.5" x2="15" y2="20.5"/></svg>
+      </button>
+      <button class="vt-btn" data-view="list" title="List View" aria-label="List View">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="5" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="5" cy="17.5" r="1.2" fill="currentColor" stroke="none"/><line x1="9" y1="6.5" x2="20" y2="6.5"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="17.5" x2="20" y2="17.5"/></svg>
+      </button>
+    </div>
+    <span id="status"></span>
+  </div>
+</div>
+
+<main class="ur-main" id="ur-main">
+
+  <aside class="ur-sidebar" id="filters-panel">
+    <div class="sidebar-title">&#128269; Search</div>
+    <div class="sidebar-tabs"><span class="active">Filters</span></div>
+
+    <div class="filter-group">
+      <label class="fg-label">Keywords</label>
+      <div id="tag-input" class="tag-input">
+        <span id="tags" class="tags"></span>
+        <input id="q" type="text" placeholder="Add keyword, press Enter">
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label class="fg-label">Search In</label>
+      <div class="kind-filter">
+        <label><input type="checkbox" class="kind-pick" data-kind="speech" checked> <span class="kind speech">speech</span></label>
+        <label><input type="checkbox" class="kind-pick" data-kind="sound" checked> <span class="kind sound">sound</span></label>
+        <label><input type="checkbox" class="kind-pick" data-kind="visual" checked> <span class="kind visual">visual</span></label>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label class="fg-label">Capture Date</label>
+      <div class="date-range">
+        <label class="date-cell">
+          <span>From</span>
+          <input type="date" id="date-from" class="date-input">
+        </label>
+        <label class="date-cell">
+          <span>To</span>
+          <input type="date" id="date-to" class="date-input">
+        </label>
+        <button type="button" id="date-clear" class="link-btn date-clear">Clear</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="fg-head">
+        <label class="fg-label">Search in Files <span class="fg-info" title="empty = entire library">&#9432;</span></label>
+        <div class="pager" id="scope-pager"></div>
+      </div>
+      <div class="scope-list">
+        <label class="scope-all-row"><input type="checkbox" id="scope-all"> <em>Select all files</em></label>
+        {% for m in media %}
+          <label class="scope-row">
+            <input type="checkbox" class="scope-pick" data-name="{{ m.name }}">
+            <span class="fname">{{ m.name }}</span>
+          </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="sidebar-actions">
+      <button id="clear" type="button" class="link-btn">Clear</button>
+      <button id="go" class="primary-btn">Search</button>
+    </div>
+  </aside>
+
+  <section class="ur-content">
+
+    <div class="card library">
+      <div class="card-head">
+        <h3><span class="card-ico">&#128221;</span> List View <span class="dash">-</span>
+            <span class="results-count">Showing <span id="result-count">{{ media|length }}</span> Results</span></h3>
+        <div class="pager" id="lib-pager"></div>
+      </div>
+      {% if not media %}
+        <p class="empty">No files available yet.</p>
+      {% endif %}
+      <div class="lib-table-wrap">
+        <table class="lib-table">
+          <thead><tr>
+            <th class="col-check"><input type="checkbox" id="sel-all"></th>
+            <th class="col-play"></th>
+            <th>File Name</th>
+            <th>Capture Date</th>
+            <th>Duration</th>
+            <th>Media Type</th>
+            <th class="col-action">Info</th>
+          </tr></thead>
+          <tbody id="lib-body">
+          {% for m in media %}
+            <tr data-name="{{ m.name }}" data-date="{{ m.capture_date_iso }}" data-mtype="{{ m.media_type }}">
+              <td class="col-check"><input type="checkbox" class="row-check"></td>
+              <td class="col-play">
+                <button class="row-play" data-name="{{ m.name }}" data-date="{{ m.capture_date }}" title="Play">&#9654;</button>
+              </td>
+              <td class="file-cell">{{ m.name }}</td>
+              <td>{{ m.capture_date }}</td>
+              <td>{{ m.duration }}</td>
+              <td>
+                <span class="mtype mtype-{{ m.media_type|lower }}">{{ m.media_type }}</span>
+              </td>
+              <td class="col-action">
+                <button class="row-action info-toggle" title="Show matches" data-name="{{ m.name }}"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<!-- Floating Player -->
+<div id="float-player" class="float-player">
+  <div class="fp-header" id="fp-header">
+    <span class="fp-title">Player</span>
+    <div class="fp-wins">
+      <button id="fp-min" title="Minimize">&#9660;</button>
+      <button id="fp-max" title="Maximize">&#10750;</button>
+      <button id="fp-close" title="Close">&#10005;</button>
+    </div>
+  </div>
+  <div class="fp-body" id="fp-body">
+    <div class="fp-info">
+      <div><strong>File Name:</strong> <span id="fp-filename"></span></div>
+      <div><strong>Captured on:</strong> <span id="fp-date"></span></div>
+    </div>
+    <div class="fp-media" id="fp-media"></div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

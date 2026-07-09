@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Play — {{ name }}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <h1><a href="{{ url_for('home') }}">&larr; Forensic-Search</a></h1>
+  <p class="tag">{{ name }}</p>
+</header>
+
+<section class="player">
+  {% if is_video %}
+    <video id="media" controls preload="metadata" width="800">
+      <source src="{{ url_for('media', name=name) }}">
+      {% if vtt_exists %}
+      <track default kind="captions" srclang="en" label="Captions"
+             src="{{ url_for('captions', name=stem + '.vtt') }}">
+      {% endif %}
+    </video>
+  {% else %}
+    <audio id="media" controls preload="metadata">
+      <source src="{{ url_for('media', name=name) }}">
+    </audio>
+    {% if vtt_exists %}
+      <div id="cc-live" class="cc-live">[captions appear here]</div>
+    {% endif %}
+  {% endif %}
+</section>
+
+{% if vtt_exists %}
+<section class="caption-list">
+  <h2>Captions</h2>
+  <div id="caption-rows">loading…</div>
+</section>
+{% else %}
+<p class="empty">No captions yet. Go back and click <b>Process</b> for this file.</p>
+{% endif %}
+
+<script>
+  window.__CC = {
+    vttUrl: {{ ('/captions/' + stem + '.vtt') | tojson if vtt_exists else 'null' }},
+    startAt: {{ start | tojson }},
+    isVideo: {{ is_video | tojson }}
+  };
+</script>
+<script src="{{ url_for('static', filename='player.js') }}"></script>
+</body>
+</html>
