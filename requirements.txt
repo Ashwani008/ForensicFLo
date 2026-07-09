@@ -1,0 +1,40 @@
+# Forensic-Search dependencies
+# Install on a fresh machine:
+#   python -m venv .venv
+#   .venv\Scripts\activate          (Windows)   |   source .venv/bin/activate (Linux/macOS)
+#   pip install -r requirements.txt
+#   # CPU-only PyTorch (smaller, no CUDA):
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+#
+# External (non-pip) requirement: ffmpeg must be on PATH (or set FFMPEG_BINARY).
+
+# --- Web framework ---------------------------------------------------------
+Flask>=3.0.0
+
+# --- Speech transcription (Whisper) ---------------------------------------
+openai-whisper>=20231117
+ffmpeg-python>=0.2.0
+imageio-ffmpeg>=0.4.9
+
+# --- Core scientific stack -------------------------------------------------
+numpy>=1.24
+soundfile>=0.12.1
+librosa>=0.10.1
+
+# --- Non-speech sound event detection (YAMNet via TensorFlow Hub) ----------
+tensorflow>=2.13 ; platform_system != "Darwin" or platform_machine != "arm64"
+tensorflow-macos>=2.13 ; platform_system == "Darwin" and platform_machine == "arm64"
+tensorflow-hub>=0.14.0
+
+# --- Visual analysis: object detection (YOLOv8) + scene captioning (BLIP) --
+# Install torch separately (see header) to choose CPU vs GPU build.
+# For headless Linux servers missing libGL, replace opencv-python with
+# opencv-python-headless in your environment.
+ultralytics>=8.0.0
+torch>=2.0.0
+transformers>=4.30.0
+Pillow>=10.0.0
+
+# --- NLP keyword expansion (lemma + WordNet synonyms) ----------------------
+# WordNet corpus is auto-downloaded on first use.
+nltk>=3.8
